@@ -11,7 +11,6 @@ export class User {
     nullable: true,
   })
   eMail: string;
-  //relation between user and post
   @OneToMany(() => Post, (post) => post.userFK)
   posts: Post[];
 }
