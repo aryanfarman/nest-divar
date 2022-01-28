@@ -13,8 +13,8 @@ import { ConsoleColorEnum } from '../enum/console-color.enum';
   providers: [UserService],
   imports: [
     TypeOrmModule.forFeature([User, Post]),
+    LoggerModule.register('user', ConsoleColorEnum.RED),
     PostModule,
-    LoggerModule.register('user', ConsoleColorEnum.BLACK),
   ],
   exports: [],
 })

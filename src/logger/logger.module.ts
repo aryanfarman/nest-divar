@@ -6,23 +6,20 @@ import { LOG } from './constants/token.constants';
 @Module({})
 export class LoggerModule {
   static register(prefix: string, color: ConsoleColorEnum): DynamicModule {
-    console.log('inside register:', prefix, color);
     return {
       module: LoggerModule,
       providers: [
         LoggerService,
         {
           scope: Scope.TRANSIENT,
-          provide: LOG,
-          useFactory: (loggerService: LoggerService) => {
-            console.log('inside useFactory:', prefix, color);
-
+          provide: LOG + prefix,
+          useFactory: (loggerService) => {
             return loggerService.set(prefix, color);
           },
           inject: [LoggerService],
         },
       ],
-      exports: [LOG],
+      exports: [LOG + prefix],
     };
   }
 }

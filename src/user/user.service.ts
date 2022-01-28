@@ -16,9 +16,9 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     private readonly postService: PostService,
-    @Inject(LOG) private readonly prefix,
+    @Inject(LOG + `user`) private readonly log,
   ) {
-    this.prefix('hi from user');
+    this.log('hi from user');
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -27,6 +27,7 @@ export class UserService {
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
+    this.log('everything is fine with u ? :D');
     const { limit, offset } = paginationQuery;
     return this.userRepository.find({
       relations: ['posts'],

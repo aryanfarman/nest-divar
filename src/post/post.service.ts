@@ -30,9 +30,9 @@ export class PostService {
     private readonly connection: Connection,
     private readonly eventService: EventService,
     @Inject(CURRENCY_SIGN) private readonly currencySign: string,
-    @Inject(LOG) private readonly prefix,
+    @Inject(LOG + `post`) private readonly log,
   ) {
-    this.prefix('hi');
+    this.log('hi from post');
   }
 
   async create(createPostDto: CreatePostDto) {
@@ -47,6 +47,7 @@ export class PostService {
   }
 
   async findAll(paginationQuery: PaginationQueryDto) {
+    this.log('yes it is!');
     const { limit, offset } = paginationQuery;
     return await this.postRepository.find({
       relations: ['categories', 'userFK'],

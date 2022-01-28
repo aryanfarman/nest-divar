@@ -1,1 +1,1 @@
-export const LOG = 'prefix';
+export const LOG = 'logger';

@@ -13,7 +13,10 @@ export class CurrencyModule {
         {
           provide: CURRENCY_SIGN,
           useFactory: async (currencyService: CurrencyService) => {
-            return currencyService.getCurrencySign('dollar', fullOption);
+            return currencyService.getCurrencySign(
+              process.env.CURRENCY,
+              fullOption,
+            );
           },
           inject: [CurrencyService],
         },
