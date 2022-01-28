@@ -5,14 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
-import Joi from '@hapi/joi';
+import { EventModule } from './event/event.module';
+import * as Joi from '@hapi/joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         DATABASE_HOST: Joi.required(),
-        DATABASE_PORT: Joi.number().default(),
+        DATABASE_PORT: Joi.number().default(1433),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -21,7 +22,7 @@ import Joi from '@hapi/joi';
       port: +process.env.DATABASE_PORT,
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
+      database: 'divar',
       synchronize: true,
       extra: {
         trustServerCertificate: true,
@@ -30,6 +31,7 @@ import Joi from '@hapi/joi';
     }),
     PostModule,
     UserModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService],

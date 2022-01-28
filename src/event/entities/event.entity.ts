@@ -1,22 +1,32 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-export enum EventType {
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '../../user/entities/user.entity';
+import { RefTypeEnum } from '../../enum/ref-type.enum';
+
+export enum EventTypeEnum {
   Liked = 'LIKED',
   Commented = 'COMMENTED',
 }
 
-@Entity()
-export class Event {
+@Entity('event')
+export class EventEntity {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({
     type: 'nvarchar',
     length: 20,
   })
-  message: EventType;
+  message: EventTypeEnum;
   @Column()
-  refType: string;
+  refType: RefTypeEnum;
   @Column()
   refID: number;
-  @Column()
-  userFK: number;
+  @ManyToOne(() => User, (user) => user.events)
+  @JoinColumn()
+  user: User;
 }

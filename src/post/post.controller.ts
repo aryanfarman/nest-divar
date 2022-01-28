@@ -1,11 +1,11 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Put,
   Query,
 } from '@nestjs/common';
@@ -13,6 +13,7 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { EventTypeEnum } from '../event/entities/event.entity';
 
 @Controller('post')
 export class PostController {
@@ -41,6 +42,15 @@ export class PostController {
   @Patch(':id')
   patch(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.update(+id, updatePostDto);
+  }
+
+  @Patch(':id/event/:type/:userId')
+  like(
+    @Param('id') id,
+    @Param('userId') userId,
+    @Param('type') type: EventTypeEnum,
+  ) {
+    return this.postService.event(+id, type, +userId);
   }
 
   @Delete(':id')
