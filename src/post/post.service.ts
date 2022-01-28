@@ -16,6 +16,7 @@ import { RefTypeEnum } from '../enum/ref-type.enum';
 import { EventService } from '../event/event.service';
 import { User } from '../user/entities/user.entity';
 import { CURRENCY_SIGN } from '../currency/constants/token.constant';
+import { LOG } from '../logger/constants/token.constants';
 
 @Injectable()
 export class PostService {
@@ -29,8 +30,9 @@ export class PostService {
     private readonly connection: Connection,
     private readonly eventService: EventService,
     @Inject(CURRENCY_SIGN) private readonly currencySign: string,
+    @Inject(LOG) private readonly prefix,
   ) {
-    console.log(this.currencySign);
+    this.prefix('hi');
   }
 
   async create(createPostDto: CreatePostDto) {

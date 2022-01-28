@@ -5,11 +5,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Post } from '../post/entities/post.entity';
 import { PostModule } from '../post/post.module';
+import { LoggerModule } from '../logger/logger.module';
+import { ConsoleColorEnum } from '../enum/console-color.enum';
 
 @Module({
   controllers: [UserController],
   providers: [UserService],
-  imports: [TypeOrmModule.forFeature([User, Post]), PostModule],
+  imports: [
+    TypeOrmModule.forFeature([User, Post]),
+    PostModule,
+    LoggerModule.register('user', ConsoleColorEnum.BLACK),
+  ],
   exports: [],
 })
 export class UserModule {}

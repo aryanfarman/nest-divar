@@ -9,6 +9,8 @@ import { EventModule } from '../event/event.module';
 import { User } from '../user/entities/user.entity';
 import { UtilityModule } from '../utility/utility.module';
 import { CurrencyModule } from '../currency/currency.module';
+import { LoggerModule } from '../logger/logger.module';
+import { ConsoleColorEnum } from '../enum/console-color.enum';
 
 @Module({
   controllers: [PostController],
@@ -18,6 +20,7 @@ import { CurrencyModule } from '../currency/currency.module';
     EventModule,
     UtilityModule,
     TypeOrmModule.forFeature([Post, Category, EventEntity, User]),
+    LoggerModule.register('post', ConsoleColorEnum.BLUE),
   ],
   exports: [PostService],
 })
