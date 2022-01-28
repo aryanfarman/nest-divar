@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -9,4 +9,6 @@ export class CreatePostDto {
   location: string;
   @IsString({ each: true })
   categories: string[];
+  @IsNumber()
+  price: number;
 }

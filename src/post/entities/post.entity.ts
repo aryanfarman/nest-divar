@@ -1,11 +1,12 @@
 import {
   Column,
-  Entity, JoinColumn,
+  Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
-  PrimaryGeneratedColumn
-} from "typeorm";
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Category } from './category.entity';
 import { User } from '../../user/entities/user.entity';
 
@@ -20,12 +21,16 @@ export class Post {
   @Column()
   location: string;
   @JoinTable()
-  @ManyToMany((type) => Category, (category) => category.posts, {
+  @ManyToMany(() => Category, (category) => category.posts, {
     cascade: true,
   })
   categories: Category[];
   @Column({ default: 0 })
   likeCount: number;
+  @Column({
+    default: 0,
+  })
+  price: number;
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({
     name: 'userFK',

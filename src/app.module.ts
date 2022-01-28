@@ -6,6 +6,9 @@ import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { EventModule } from './event/event.module';
+import { UtilityModule } from './utility/utility.module';
+import { CurrencyModule } from './currency/currency.module';
+import { LoggerModule } from './logger/logger.module';
 import * as Joi from '@hapi/joi';
 
 @Module({
@@ -32,6 +35,9 @@ import * as Joi from '@hapi/joi';
     PostModule,
     UserModule,
     EventModule,
+    UtilityModule,
+    CurrencyModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

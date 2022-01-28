@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { EventEntity, EventTypeEnum } from '../event/entities/event.entity';
 import { RefTypeEnum } from '../enum/ref-type.enum';
 import { EventService } from '../event/event.service';
 import { User } from '../user/entities/user.entity';
+import { CURRENCY_SIGN } from '../currency/constants/token.constant';
 
 @Injectable()
 export class PostService {
@@ -26,7 +28,10 @@ export class PostService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly connection: Connection,
     private readonly eventService: EventService,
-  ) {}
+    @Inject(CURRENCY_SIGN) private readonly currencySign: string,
+  ) {
+    console.log(this.currencySign);
+  }
 
   async create(createPostDto: CreatePostDto) {
     const categories = await Promise.all(
