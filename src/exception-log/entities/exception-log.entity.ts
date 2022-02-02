@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('ExceptionLog')
 export class ExceptionLog {
   @PrimaryGeneratedColumn()
   id: number;
@@ -9,5 +9,5 @@ export class ExceptionLog {
   @Column()
   status: number;
   @Column()
-  creationTime: Date;
+  creationTime: string = new Date().toString();
 }

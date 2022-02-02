@@ -21,8 +21,9 @@ import { ExceptionLogModule } from '../exception-log/exception-log.module';
     ConfigModule.forRoot({
       load: [appConfig],
       validationSchema: Joi.object({
-        DATABASE_HOST: Joi.required(),
+        DATABASE_HOST: Joi.string().required(),
         DATABASE_PORT: Joi.number().default(1433),
+        DATABASE_USERNAME: Joi.string().required(),
         VALIDATION_WHITELIST: Joi.boolean().required(),
         VALIDATION_FORBID_NON_WHITE_LISTED: Joi.boolean().required(),
       }),

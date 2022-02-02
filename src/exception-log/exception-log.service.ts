@@ -12,9 +12,8 @@ export class ExceptionLogService {
 
   async insert(status: number, message: string) {
     const log = this.exceptionLogRepository.create({
-      status: status,
-      message: message,
-      creationTime: new Date(),
+      status,
+      message,
     });
     return await this.exceptionLogRepository.save(log);
   }

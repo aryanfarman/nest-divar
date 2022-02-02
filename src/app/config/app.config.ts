@@ -9,6 +9,11 @@ export default registerAs('root', () => ({
     extra: {
       trustServerCertificate: true,
     },
-    autoLoadEntities: true,
+    cli: {
+      migrationsDir: 'src/migrations',
+    },
+    synchronize: true,
+    migrations: ['dist/migrations/*.js'],
+    entities: ['dist/**/*.entity.js'],
   },
 }));
