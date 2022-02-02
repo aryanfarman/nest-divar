@@ -24,10 +24,12 @@ export class LogExceptionFilter implements ExceptionFilter {
     const log = await this.exceptionService.insert(
       exception.getStatus(),
       myResponse.message,
+      response.req.url,
+      response.req.method,
     );
     response.status(exception.getStatus()).json({
       ...myResponse,
-      logId: log.id,
+      ...log,
     });
   }
 }

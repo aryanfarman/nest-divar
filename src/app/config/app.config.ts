@@ -13,7 +13,6 @@ export default registerAs('root', () => ({
       migrationsDir: 'src/migrations',
     },
     synchronize: true,
-    migrations: ['dist/migrations/*.js'],
     entities: ['dist/**/*.entity.js'],
   },
 }));

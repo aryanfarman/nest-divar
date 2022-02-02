@@ -10,4 +10,8 @@ export class ExceptionLog {
   status: number;
   @Column()
   creationTime: string = new Date().toString();
+  @Column()
+  url: string;
+  @Column()
+  method: string;
 }

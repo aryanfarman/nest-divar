@@ -10,10 +10,12 @@ export class ExceptionLogService {
     private readonly exceptionLogRepository: Repository<ExceptionLog>,
   ) {}
 
-  async insert(status: number, message: string) {
+  async insert(status: number, message: string, url: string, method: string) {
     const log = this.exceptionLogRepository.create({
       status,
       message,
+      url,
+      method,
     });
     return await this.exceptionLogRepository.save(log);
   }
