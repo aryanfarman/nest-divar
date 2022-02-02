@@ -27,7 +27,6 @@ export class UserService {
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
-    this.log('everything is fine with u ? :D');
     const { limit, offset } = paginationQuery;
     return this.userRepository.find({
       relations: ['posts'],

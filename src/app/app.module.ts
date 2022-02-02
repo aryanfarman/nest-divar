@@ -1,24 +1,30 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from '../post/post.module';
 import { UserModule } from '../user/user.module';
-import { ConfigModule, ConfigType } from '@nestjs/config';
+import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { EventModule } from '../event/event.module';
 import { UtilityModule } from '../utility/utility.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { LoggerModule } from '../logger/logger.module';
 import appConfig from './config/app.config';
 import * as Joi from '@hapi/joi';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { LogExceptionFilter } from '../common/filters/log-exception.filter';
+import { ExceptionLogModule } from '../exception-log/exception-log.module';
 
 @Module({
   imports: [
+    ExceptionLogModule,
     ConfigModule.forRoot({
       load: [appConfig],
       validationSchema: Joi.object({
         DATABASE_HOST: Joi.required(),
         DATABASE_PORT: Joi.number().default(1433),
+        VALIDATION_WHITELIST: Joi.boolean().required(),
+        VALIDATION_FORBID_NON_WHITE_LISTED: Joi.boolean().required(),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -38,6 +44,26 @@ import * as Joi from '@hapi/joi';
     LoggerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: LogExceptionFilter,
+    },
+    {
+      provide: APP_PIPE,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return new ValidationPipe({
+          whitelist: configService.get('VALIDATION_WHITELIST'),
+          transform: configService.get('VALIDATION_FORBID_NON_WHITE_LISTED'),
+          forbidNonWhitelisted: true,
+          transformOptions: {
+            enableImplicitConversion: true,
+          },
+        });
+      },
+    },
+  ],
 })
 export class AppModule {}
