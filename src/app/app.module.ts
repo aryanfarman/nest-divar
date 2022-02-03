@@ -11,9 +11,11 @@ import { CurrencyModule } from '../currency/currency.module';
 import { LoggerModule } from '../logger/logger.module';
 import appConfig from './config/app.config';
 import * as Joi from '@hapi/joi';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { LogExceptionFilter } from '../common/filters/log-exception.filter';
 import { ExceptionLogModule } from '../exception-log/exception-log.module';
+import { AppKeyGuard } from '../common/guards/app-key.guard';
+import { AppKeyModule } from '../app-key/app-key.module';
 
 @Module({
   imports: [
@@ -43,6 +45,7 @@ import { ExceptionLogModule } from '../exception-log/exception-log.module';
     UtilityModule,
     CurrencyModule,
     LoggerModule,
+    AppKeyModule,
   ],
   controllers: [AppController],
   providers: [
@@ -50,6 +53,10 @@ import { ExceptionLogModule } from '../exception-log/exception-log.module';
     {
       provide: APP_FILTER,
       useClass: LogExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AppKeyGuard,
     },
     {
       provide: APP_PIPE,

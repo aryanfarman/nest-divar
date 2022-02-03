@@ -14,6 +14,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { EventTypeEnum } from '../event/entities/event.entity';
+import { IsPublic } from '../common/guards/isPublic-decorator';
 
 @Controller('post')
 export class PostController {
@@ -24,11 +25,13 @@ export class PostController {
     return this.postService.create(createPostDto);
   }
 
+  @IsPublic()
   @Get()
   findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.postService.findAll(paginationQuery);
   }
 
+  @IsPublic()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postService.findOne(+id);
