@@ -13,9 +13,10 @@ import { LoggerModule } from '../logger/logger.module';
 import { ConsoleColorEnum } from '../enum/console-color.enum';
 import { UtilityService } from '../utility/utility.service';
 import { CategoryService } from './category.service';
+import { CategoryController } from './category.controller';
 
 @Module({
-  controllers: [PostController],
+  controllers: [PostController, CategoryController],
   providers: [
     PostService,
     CategoryService,

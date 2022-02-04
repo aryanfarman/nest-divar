@@ -14,4 +14,12 @@ export class CategoryService {
     const result = this.categoryRepository.create(input);
     return await this.categoryRepository.save(result);
   }
+
+  findAll() {
+    return this.categoryRepository.find();
+  }
+
+  findOne(id: number | string) {
+    return this.categoryRepository.findOne(id);
+  }
 }
