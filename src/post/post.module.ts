@@ -11,10 +11,29 @@ import { UtilityModule } from '../utility/utility.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { LoggerModule } from '../logger/logger.module';
 import { ConsoleColorEnum } from '../enum/console-color.enum';
+import { UtilityService } from '../utility/utility.service';
+import { CategoryService } from './category.service';
 
 @Module({
   controllers: [PostController],
-  providers: [PostService],
+  providers: [
+    PostService,
+    CategoryService,
+    {
+      provide: 'categories',
+      useFactory: (
+        utilityService: UtilityService,
+        categoryService: CategoryService,
+      ) => {
+        const brands = utilityService.loadCategories();
+        brands.subscribe(async (value) => {
+          await categoryService.create(value);
+          console.log('fetching categories data from divar done!');
+        });
+      },
+      inject: [UtilityService, CategoryService],
+    },
+  ],
   imports: [
     CurrencyModule.register(true),
     EventModule,

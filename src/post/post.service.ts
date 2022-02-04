@@ -126,6 +126,6 @@ export class PostService {
     if (existingCategory) {
       return existingCategory;
     }
-    return this.categoryRepository.create({ name });
+    throw new NotFoundException('this category does not valid');
   }
 }

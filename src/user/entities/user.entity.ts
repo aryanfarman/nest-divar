@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from '../../post/entities/post.entity';
 import { EventEntity } from '../../event/entities/event.entity';
+import { ScheduledNotify } from '../../scheduled-notify/entities/scheduled-notify.entity';
 
 @Entity()
 export class User {
@@ -16,4 +17,6 @@ export class User {
   posts: Post[];
   @OneToMany(() => EventEntity, (event) => event.user)
   events: EventEntity[];
+  @OneToMany(() => ScheduledNotify, (scheduledNotify) => scheduledNotify.userFK)
+  scheduledNotifies: ScheduledNotify[];
 }

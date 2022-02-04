@@ -17,9 +17,11 @@ import { ExceptionLogModule } from '../exception-log/exception-log.module';
 import { AppKeyGuard } from '../common/guards/app-key.guard';
 import { AppKeyModule } from '../app-key/app-key.module';
 import { ResponseWrapperInterceptor } from '../common/interceptors/response-wrapper.interceptor';
+import { ScheduledNotifyModule } from '../scheduled-notify/scheduled-notify.module';
 
 @Module({
   imports: [
+    ScheduledNotifyModule,
     ExceptionLogModule,
     ConfigModule.forRoot({
       load: [appConfig],
@@ -29,6 +31,8 @@ import { ResponseWrapperInterceptor } from '../common/interceptors/response-wrap
         DATABASE_USERNAME: Joi.string().required(),
         VALIDATION_WHITELIST: Joi.boolean().required(),
         VALIDATION_FORBID_NON_WHITE_LISTED: Joi.boolean().required(),
+        HTTP_TIMEOUT: Joi.number(),
+        HTTP_MAX_REDIRECTS: Joi.number(),
       }),
     }),
     TypeOrmModule.forRootAsync({

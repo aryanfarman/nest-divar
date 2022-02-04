@@ -1,12 +1,18 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm';
 import { Post } from './post.entity';
+import { ScheduledNotify } from '../../scheduled-notify/entities/scheduled-notify.entity';
 
 @Entity()
 export class Category {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
   @Column()
   name: string;
   @ManyToMany((type) => Post, (post) => post.categories)
   posts: Post[];
+  @OneToMany(
+    () => ScheduledNotify,
+    (scheduledNotify) => scheduledNotify.categoryFK,
+  )
+  scheduledNotifies: ScheduledNotify[];
 }
