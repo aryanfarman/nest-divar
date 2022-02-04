@@ -31,6 +31,7 @@ import { ScheduledNotifyModule } from '../scheduled-notify/scheduled-notify.modu
         DATABASE_USERNAME: Joi.string().required(),
         VALIDATION_WHITELIST: Joi.boolean().required(),
         VALIDATION_FORBID_NON_WHITE_LISTED: Joi.boolean().required(),
+        VALIDATION_TRANSFORM: Joi.boolean().required(),
         HTTP_TIMEOUT: Joi.number(),
         HTTP_MAX_REDIRECTS: Joi.number(),
       }),
@@ -73,8 +74,10 @@ import { ScheduledNotifyModule } from '../scheduled-notify/scheduled-notify.modu
       useFactory: (configService: ConfigService) => {
         return new ValidationPipe({
           whitelist: configService.get('VALIDATION_WHITELIST'),
-          transform: configService.get('VALIDATION_FORBID_NON_WHITE_LISTED'),
-          forbidNonWhitelisted: true,
+          transform: configService.get('VALIDATION_TRANSFORM'),
+          forbidNonWhitelisted: configService.get(
+            'VALIDATION_FORBID_NON_WHITE_LISTED',
+          ),
           transformOptions: {
             enableImplicitConversion: true,
           },

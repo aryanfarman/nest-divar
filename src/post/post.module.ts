@@ -42,6 +42,6 @@ import { CategoryController } from './category.controller';
     TypeOrmModule.forFeature([Post, Category, EventEntity, User]),
     LoggerModule.register('post', ConsoleColorEnum.BLUE),
   ],
-  exports: [PostService],
+  exports: [PostService, CategoryService],
 })
 export class PostModule {}

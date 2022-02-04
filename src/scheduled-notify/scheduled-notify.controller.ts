@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ScheduledNotifyService } from './scheduled-notify.service';
 import { CreateScheduledNotifyDto } from './dto/create-scheduled-notify.dto';
@@ -18,7 +19,7 @@ export class ScheduledNotifyController {
   ) {}
 
   @Post()
-  create(@Body() createScheduledNotifyDto: CreateScheduledNotifyDto) {
+  create(@Query() createScheduledNotifyDto: CreateScheduledNotifyDto) {
     return this.scheduledNotifyService.create(createScheduledNotifyDto);
   }
 

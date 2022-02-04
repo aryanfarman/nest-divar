@@ -16,6 +16,6 @@ import { ConsoleColorEnum } from '../enum/console-color.enum';
     LoggerModule.register('user', ConsoleColorEnum.RED),
     PostModule,
   ],
-  exports: [],
+  exports: [UserService],
 })
 export class UserModule {}
