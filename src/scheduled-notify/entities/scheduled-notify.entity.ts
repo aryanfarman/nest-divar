@@ -20,4 +20,8 @@ export class ScheduledNotify {
   userFK: User;
   @Column()
   price: number;
+  @Column({
+    default: 5000000,
+  })
+  kilometer: number;
 }

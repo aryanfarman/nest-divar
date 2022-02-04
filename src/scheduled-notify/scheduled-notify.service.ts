@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateScheduledNotifyDto } from './dto/create-scheduled-notify.dto';
-import { UpdateScheduledNotifyDto } from './dto/update-scheduled-notify.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ScheduledNotify } from './entities/scheduled-notify.entity';
 import { Repository } from 'typeorm';
@@ -18,12 +17,16 @@ export class ScheduledNotifyService {
   ) {}
 
   async create(createScheduledNotifyDto: CreateScheduledNotifyDto) {
+    if (!createScheduledNotifyDto.kilometer) {
+      createScheduledNotifyDto.kilometer = 5000000;
+    }
     const scheduledEntity = this.scheduledNotifyRepository.create({
       categoryFK: await this.categoryService.findOne(
         createScheduledNotifyDto.categoryFK,
       ),
       userFK: await this.userService.findOne(createScheduledNotifyDto.userFK),
       price: createScheduledNotifyDto.price,
+      kilometer: createScheduledNotifyDto.kilometer,
     });
     const flag = await this.scheduledNotifyRepository.findOne({
       where: {
@@ -35,34 +38,37 @@ export class ScheduledNotifyService {
       return await this.getDataFromDivar(
         scheduledEntity.categoryFK.name,
         scheduledEntity.price,
+        scheduledEntity.kilometer,
       );
     }
     await this.scheduledNotifyRepository.save(scheduledEntity);
     return await this.getDataFromDivar(
       scheduledEntity.categoryFK.name,
       scheduledEntity.price,
+      scheduledEntity.kilometer,
     );
   }
 
-  async getDataFromDivar(category, price) {
+  async getDataFromDivar(category, price, kilometer) {
     const dataFromDivar = await getCars(category);
-    dataFromDivar.map((item) => item.price <= price);
-    return dataFromDivar;
+    return dataFromDivar.filter((item) => {
+      item.kilometer = item.kilometer.replace('KM', '');
+      if (item.price <= price && +item.kilometer <= kilometer) {
+        item.kilometer += 'KM';
+        return item;
+      }
+    });
   }
 
   findAll() {
-    return `This action returns all scheduledNotify`;
+    return this.scheduledNotifyRepository.find({
+      relations: ['userFK', 'categoryFK'],
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} scheduledNotify`;
-  }
-
-  update(id: number, updateScheduledNotifyDto: UpdateScheduledNotifyDto) {
-    return `This action updates a #${id} scheduledNotify`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} scheduledNotify`;
+    return this.scheduledNotifyRepository.findOne(id, {
+      relations: ['userFK', 'categoryFK'],
+    });
   }
 }
