@@ -1,12 +1,12 @@
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateScheduledNotifyDto {
   @IsNumber()
   userFK: number;
   @IsNumber()
   categoryFK: number;
-  @IsNumber()
-  price: number;
+  @IsString()
+  price: string;
   @IsOptional()
   @IsNumber()
   kilometer: number;

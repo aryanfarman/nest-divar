@@ -19,9 +19,9 @@ export class ScheduledNotify {
   @JoinColumn()
   userFK: User;
   @Column()
-  price: number;
+  price: string;
   @Column({
-    default: 5000000,
+    default: 50000000,
   })
   kilometer: number;
 }

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import cheerio from 'cheerio';
-import { map } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
+import { CannotExecuteNotConnectedError } from 'typeorm';
 
 @Injectable()
 export class UtilityService {
@@ -26,6 +27,9 @@ export class UtilityService {
           });
         });
         return brands;
+      }),
+      catchError((err) => {
+        return throwError(() => new CannotExecuteNotConnectedError(err));
       }),
     );
   }

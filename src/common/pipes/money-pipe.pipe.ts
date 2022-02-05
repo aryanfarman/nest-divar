@@ -1,21 +1,32 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
+import { CreateScheduledNotifyDto } from '../../scheduled-notify/dto/create-scheduled-notify.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MoneyPipe implements PipeTransform {
-  transform(value: string, metadata: ArgumentMetadata) {
+  constructor(private readonly configService: ConfigService) {}
+
+  transform(value: CreateScheduledNotifyDto, metadata: ArgumentMetadata) {
+    let target: string = value.price;
     const currency = ['$', '€', 'ریال'];
     let i = currency.length;
     let isAccepted = false;
-    while (!isAccepted || i == 0) {
-      if (value.endsWith(currency[i])) {
+    target = target.replace(/,/g, '');
+    while (!isAccepted && i > -1) {
+      if (target.endsWith(currency[i])) {
         isAccepted = true;
-        value = value.replace(currency[i], '');
+        if (currency[i] == 'ریال')
+          target = target.replace(`0${currency[i]}`, '');
+        else {
+          target = target.replace(currency[i], '');
+          const changeCurrency =
+            +target * this.configService.get(`CURRENCY_VALUE`);
+          target = `${changeCurrency}`;
+        }
       }
       i--;
     }
-
-    value = value.replace(/,/g, '');
-
+    value.price = target;
     return value;
   }
 }

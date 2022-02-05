@@ -19,7 +19,7 @@ export class LoggerModule {
           inject: [LoggerService],
         },
       ],
-      exports: [LOG + prefix],
+      exports: [LOG + prefix, LoggerService],
     };
   }
 }

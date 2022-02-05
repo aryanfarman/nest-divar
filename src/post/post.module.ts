@@ -14,6 +14,7 @@ import { ConsoleColorEnum } from '../enum/console-color.enum';
 import { UtilityService } from '../utility/utility.service';
 import { CategoryService } from './category.service';
 import { CategoryController } from './category.controller';
+import { LoggerService } from '../logger/logger.service';
 
 @Module({
   controllers: [PostController, CategoryController],
@@ -25,14 +26,19 @@ import { CategoryController } from './category.controller';
       useFactory: (
         utilityService: UtilityService,
         categoryService: CategoryService,
+        loggerService: LoggerService,
       ) => {
         const brands = utilityService.loadCategories();
         brands.subscribe(async (value) => {
           await categoryService.create(value);
-          console.log('fetching categories data from divar done!');
+          const log = await loggerService.set(
+            'Database',
+            ConsoleColorEnum.BLUE,
+          );
+          log('fetching categories data from divar done!');
         });
       },
-      inject: [UtilityService, CategoryService],
+      inject: [UtilityService, CategoryService, LoggerService],
     },
   ],
   imports: [
@@ -41,6 +47,7 @@ import { CategoryController } from './category.controller';
     UtilityModule,
     TypeOrmModule.forFeature([Post, Category, EventEntity, User]),
     LoggerModule.register('post', ConsoleColorEnum.BLUE),
+    LoggerModule.register('database', ConsoleColorEnum.RED),
   ],
   exports: [PostService, CategoryService],
 })

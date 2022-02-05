@@ -6,9 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduledNotify } from './entities/scheduled-notify.entity';
 import { PostModule } from '../post/post.module';
 import { UserModule } from '../user/user.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule,
     HttpModule,
     PostModule,
     UserModule,

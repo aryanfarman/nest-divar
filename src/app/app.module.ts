@@ -34,6 +34,7 @@ import { ScheduledNotifyModule } from '../scheduled-notify/scheduled-notify.modu
         VALIDATION_TRANSFORM: Joi.boolean().required(),
         HTTP_TIMEOUT: Joi.number(),
         HTTP_MAX_REDIRECTS: Joi.number(),
+        CURRENCY_VALUE: Joi.number().required(),
       }),
     }),
     TypeOrmModule.forRootAsync({

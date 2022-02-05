@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query, UsePipes } from '@nestjs/common';
 import { ScheduledNotifyService } from './scheduled-notify.service';
 import { CreateScheduledNotifyDto } from './dto/create-scheduled-notify.dto';
+import { MoneyPipe } from '../common/pipes/money-pipe.pipe';
 
 @Controller('scheduled-notify')
 export class ScheduledNotifyController {
@@ -9,6 +10,7 @@ export class ScheduledNotifyController {
   ) {}
 
   @Post()
+  @UsePipes(MoneyPipe)
   create(
     @Query()
     createScheduledNotifyDto: CreateScheduledNotifyDto,

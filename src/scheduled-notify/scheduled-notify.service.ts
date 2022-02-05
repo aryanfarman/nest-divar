@@ -17,7 +17,7 @@ export class ScheduledNotifyService {
   ) {}
 
   async create(createScheduledNotifyDto: CreateScheduledNotifyDto) {
-    if (!createScheduledNotifyDto.kilometer) {
+    if (typeof createScheduledNotifyDto.kilometer == 'undefined') {
       createScheduledNotifyDto.kilometer = 5000000;
     }
     const scheduledEntity = this.scheduledNotifyRepository.create({
@@ -34,26 +34,26 @@ export class ScheduledNotifyService {
         userFK: scheduledEntity.userFK.id,
       },
     });
-    if (flag) {
-      return await this.getDataFromDivar(
-        scheduledEntity.categoryFK.name,
-        scheduledEntity.price,
-        scheduledEntity.kilometer,
-      );
-    }
-    await this.scheduledNotifyRepository.save(scheduledEntity);
-    return await this.getDataFromDivar(
+    const res = await this.getDataFromDivar(
       scheduledEntity.categoryFK.name,
       scheduledEntity.price,
       scheduledEntity.kilometer,
     );
+    if (res.length == 0) {
+      return 'there is no match for your search';
+    }
+    if (flag) {
+      return res;
+    }
+    await this.scheduledNotifyRepository.save(scheduledEntity);
+    return res;
   }
 
   async getDataFromDivar(category, price, kilometer) {
     const dataFromDivar = await getCars(category);
     return dataFromDivar.filter((item) => {
       item.kilometer = item.kilometer.replace('KM', '');
-      if (item.price <= price && +item.kilometer <= kilometer) {
+      if (item.price <= +price && +item.kilometer <= kilometer) {
         item.kilometer += 'KM';
         return item;
       }
