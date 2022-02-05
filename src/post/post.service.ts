@@ -46,7 +46,7 @@ export class PostService {
     return this.postRepository.save(post);
   }
 
-  async findAll(paginationQuery: PaginationQueryDto) {
+  async findAll(paginationQuery?: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
     return await this.postRepository.find({
       relations: ['categories', 'userFK'],

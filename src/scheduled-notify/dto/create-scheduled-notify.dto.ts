@@ -1,13 +1,20 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateScheduledNotifyDto {
-  @IsNumber()
+  @ApiProperty({
+    required: true,
+  })
   userFK: number;
-  @IsNumber()
+  @ApiProperty({
+    required: true,
+  })
   categoryFK: number;
-  @IsString()
+  @ApiProperty({
+    required: true,
+  })
   price: string;
-  @IsOptional()
-  @IsNumber()
+  @ApiProperty({
+    required: false,
+  })
   kilometer: number;
 }

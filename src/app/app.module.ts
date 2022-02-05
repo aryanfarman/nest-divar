@@ -1,4 +1,9 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,6 +23,8 @@ import { AppKeyGuard } from '../common/guards/app-key.guard';
 import { AppKeyModule } from '../app-key/app-key.module';
 import { ResponseWrapperInterceptor } from '../common/interceptors/response-wrapper.interceptor';
 import { ScheduledNotifyModule } from '../scheduled-notify/scheduled-notify.module';
+import { ReqResDurationMiddleware } from '../common/middlewares/req-res-duration.middleware';
+import { ConsoleColorEnum } from '../enum/console-color.enum';
 
 @Module({
   imports: [
@@ -51,7 +58,7 @@ import { ScheduledNotifyModule } from '../scheduled-notify/scheduled-notify.modu
     EventModule,
     UtilityModule,
     CurrencyModule,
-    LoggerModule,
+    LoggerModule.register('AppLog', ConsoleColorEnum.RED),
     AppKeyModule,
   ],
   controllers: [AppController],
@@ -87,4 +94,8 @@ import { ScheduledNotifyModule } from '../scheduled-notify/scheduled-notify.modu
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(ReqResDurationMiddleware).forRoutes('*');
+  }
+}

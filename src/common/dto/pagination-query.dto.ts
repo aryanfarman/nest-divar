@@ -1,10 +1,16 @@
-import { IsOptional, IsPositive } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class PaginationQueryDto {
-  @IsOptional()
-  @IsPositive()
+  @ApiProperty({
+    nullable: true,
+    required: false,
+    minimum: 0,
+  })
   limit: number;
-  @IsOptional()
-  @IsPositive()
+  @ApiProperty({
+    nullable: true,
+    required: false,
+    minimum: 0,
+  })
   offset: number;
 }
