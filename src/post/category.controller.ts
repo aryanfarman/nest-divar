@@ -5,6 +5,7 @@ import {
   ApiHeader,
   ApiNotFoundResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -37,6 +38,9 @@ export class CategoryController {
   })
   @ApiOperation({
     description: 'get a category with an ID that fetch from divar!',
+  })
+  @ApiParam({
+    name: 'id',
   })
   @Get(':id')
   findOne(@Param('id') id: string) {

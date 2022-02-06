@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateScheduledNotifyDto } from './dto/create-scheduled-notify.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ScheduledNotify } from './entities/scheduled-notify.entity';
@@ -20,6 +20,13 @@ export class ScheduledNotifyService {
     if (typeof createScheduledNotifyDto.kilometer == 'undefined') {
       createScheduledNotifyDto.kilometer = 5000000;
     }
+    const category = await this.categoryService.findOne(
+      createScheduledNotifyDto.categoryFK,
+    );
+    if (!category)
+      throw new NotFoundException(
+        'category id must be valid get valid ids from route /categories',
+      );
     const scheduledEntity = this.scheduledNotifyRepository.create({
       categoryFK: await this.categoryService.findOne(
         createScheduledNotifyDto.categoryFK,

@@ -5,8 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
 import { Category } from './entities/category.entity';
 import { EventEntity } from '../event/entities/event.entity';
-import { EventModule } from '../event/event.module';
-import { User } from '../user/entities/user.entity';
 import { UtilityModule } from '../utility/utility.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { LoggerModule } from '../logger/logger.module';
@@ -15,6 +13,9 @@ import { UtilityService } from '../utility/utility.service';
 import { CategoryService } from './category.service';
 import { CategoryController } from './category.controller';
 import { LoggerService } from '../logger/logger.service';
+import { UserRepository } from '../repositories/user.repository';
+import { CategoryRepository } from '../repositories/category.repository';
+import { EventRepository } from '../event/event.repository';
 
 @Module({
   controllers: [PostController, CategoryController],
@@ -43,9 +44,15 @@ import { LoggerService } from '../logger/logger.service';
   ],
   imports: [
     CurrencyModule.register(true),
-    EventModule,
     UtilityModule,
-    TypeOrmModule.forFeature([Post, Category, EventEntity, User]),
+    TypeOrmModule.forFeature([
+      Post,
+      Category,
+      EventEntity,
+      UserRepository,
+      CategoryRepository,
+      EventRepository,
+    ]),
     LoggerModule.register('post', ConsoleColorEnum.BLUE),
     LoggerModule.register('database', ConsoleColorEnum.RED),
   ],

@@ -20,6 +20,7 @@ import {
   ApiHeader,
   ApiNotFoundResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -61,6 +62,9 @@ export class PostController {
     description:
       'this route will return an internal post on app\n its public route',
   })
+  @ApiParam({
+    name: 'id',
+  })
   @IsPublic()
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -82,6 +86,9 @@ export class PostController {
     description:
       'this update a internal post in app with only valid categories',
   })
+  @ApiParam({
+    name: 'id',
+  })
   @Put(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.update(+id, updatePostDto);
@@ -102,6 +109,9 @@ export class PostController {
     description:
       'this update a internal post in app with only valid categories',
   })
+  @ApiParam({
+    name: 'id',
+  })
   @Patch(':id')
   patch(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.update(+id, updatePostDto);
@@ -115,6 +125,12 @@ export class PostController {
   })
   @ApiOperation({
     description: 'an existed user can like an existed post',
+  })
+  @ApiParam({
+    name: 'id',
+  })
+  @ApiParam({
+    name: 'userId',
   })
   @IsPublic()
   @Patch(':id/event/:type/:userId')
@@ -139,6 +155,9 @@ export class PostController {
   })
   @ApiOperation({
     description: 'this delete a internal post in app',
+  })
+  @ApiParam({
+    name: 'id',
   })
   @Delete(':id')
   remove(@Param('id') id: string) {

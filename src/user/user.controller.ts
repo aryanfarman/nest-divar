@@ -21,6 +21,7 @@ import {
   ApiHeader,
   ApiNotFoundResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { LocalAuthGuard } from '../auth/guards/local-auth-guard.guard';
@@ -33,13 +34,11 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @IsPublic()
-  @ApiOperation({
-    description: 'user login.',
-  })
   @Post('/login')
   @UseGuards(LocalAuthGuard)
   @ApiBody({
     type: LoginUserDto,
+    description: 'user login.',
   })
   login(@Request() req) {
     return req.user;
@@ -73,6 +72,10 @@ export class UserController {
   @ApiHeader({
     name: 'x-app-key',
     description: 'this a monetize route you have to set x-app-key in headers',
+    required: true,
+  })
+  @ApiParam({
+    name: 'id',
     required: true,
   })
   @Post(':id/new-post')
@@ -110,6 +113,10 @@ export class UserController {
   @ApiOperation({
     description: 'get a user with an ID !',
   })
+  @ApiParam({
+    name: 'id',
+    required: true,
+  })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
@@ -129,6 +136,10 @@ export class UserController {
   @ApiOperation({
     description: 'update a user with an ID !',
   })
+  @ApiParam({
+    name: 'id',
+    required: true,
+  })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
@@ -146,7 +157,11 @@ export class UserController {
     description: 'this a monetize route you have to set x-app-key in headers',
   })
   @ApiOperation({
-    description: 'remove a category with an ID',
+    description: 'remove a user with an ID',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
   })
   @Delete(':id')
   remove(@Param('id') id: string) {

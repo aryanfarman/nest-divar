@@ -3,6 +3,8 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  NotAcceptableException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AppKeyService } from '../../app-key/app-key.service';
 import { Reflector } from '@nestjs/core';
@@ -10,6 +12,7 @@ import { IS_PUBLIC } from './isPublic-decorator';
 import { Request } from 'express';
 import { IS_ADMIN } from './isAdmin-decortor';
 import { ConfigService } from '@nestjs/config';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class AppKeyGuard implements CanActivate {
@@ -36,13 +39,16 @@ export class AppKeyGuard implements CanActivate {
     if (this.reflector.get(IS_PUBLIC, context.getHandler())) {
       return true;
     }
-    let appKey;
-    if (request.headers['x-app-key']) {
-      appKey = request.headers['x-app-key'];
-    } else {
+
+    if (!request.headers['x-app-key']) {
       throw new BadRequestException('headers must have x-app-key');
     }
-    const entity = await this.appKeyService.findOne(appKey);
+    if (!isUUID(request.headers['x-app-key'])) {
+      throw new NotAcceptableException('app key must be a UUID');
+    }
+    const appKey = request.headers['x-app-key'];
+    const entity = await this.appKeyService.findOne(appKey as string);
+    if (!entity) throw new UnauthorizedException('app key is not valid');
     return appKey === entity.key;
   }
 }

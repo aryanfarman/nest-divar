@@ -10,18 +10,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
-import { Post } from '../post/entities/post.entity';
 import { CreatePostDto } from '../post/dto/create-post.dto';
-import { PostService } from '../post/post.service';
 import { LOG } from '../logger/constants/token.constants';
 import { UtilityService } from '../utility/utility.service';
+import { PostRepository } from '../repositories/post.repository';
+import { CategoryRepository } from '../repositories/category.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
-    private readonly postService: PostService,
+    private readonly postRepository: PostRepository,
+    private readonly categoryRepository: CategoryRepository,
     @Inject(LOG + `user`) private readonly log,
     private readonly utilityService: UtilityService,
   ) {
@@ -69,14 +69,22 @@ export class UserService {
   }
 
   async createPost(id: number, createPostDto: CreatePostDto) {
-    const post = await this.postService.create(createPostDto);
+    const categories = await Promise.all(
+      createPostDto.categories.map((name) =>
+        this.categoryRepository.preloadCategoryByName(name),
+      ),
+    );
+    const post = await this.postRepository.createPost(
+      createPostDto,
+      categories,
+    );
     const user = await this.findOne(id);
     if (!user) {
       throw new NotFoundException('user does not exist!');
     }
     user.posts.push(post);
     await this.userRepository.save(user);
-    return await this.postRepository.findOne(post.postId);
+    return post;
   }
 
   async remove(id: number) {
