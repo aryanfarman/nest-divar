@@ -13,6 +13,7 @@ export default registerAs('root', () => ({
       migrationsDir: 'src/migrations',
     },
     synchronize: true,
-    entities: ['dist/**/*.entity.js'],
+    autoLoadEntities: true,
+    database: 'divar',
   },
 }));

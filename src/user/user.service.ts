@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +14,7 @@ import { Post } from '../post/entities/post.entity';
 import { CreatePostDto } from '../post/dto/create-post.dto';
 import { PostService } from '../post/post.service';
 import { LOG } from '../logger/constants/token.constants';
+import { UtilityService } from '../utility/utility.service';
 
 @Injectable()
 export class UserService {
@@ -17,11 +23,20 @@ export class UserService {
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     private readonly postService: PostService,
     @Inject(LOG + `user`) private readonly log,
+    private readonly utilityService: UtilityService,
   ) {
     this.log('hi from user');
   }
 
   async create(createUserDto: CreateUserDto) {
+    const flag = this.utilityService.confirmPasswords(
+      createUserDto.password,
+      createUserDto.confirmPassword,
+    );
+    if (!flag) {
+      throw new BadRequestException('Those passwords didn’t match. Try again.');
+    }
+    createUserDto.password = this.utilityService.hash(createUserDto.password);
     const user = await this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }

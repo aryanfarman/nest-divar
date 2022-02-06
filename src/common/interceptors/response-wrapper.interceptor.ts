@@ -5,6 +5,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class ResponseWrapperInterceptor implements NestInterceptor {
@@ -12,7 +13,7 @@ export class ResponseWrapperInterceptor implements NestInterceptor {
     const t0 = performance.now();
     return next.handle().pipe(
       map((res) => ({
-        data: res,
+        data: instanceToPlain(res),
         responseTime: Math.floor(performance.now() - t0) + `ms`,
       })),
     );

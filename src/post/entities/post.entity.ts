@@ -20,20 +20,18 @@ export class Post {
   content: string;
   @Column()
   location: string;
-  @JoinTable()
-  @ManyToMany(() => Category, (category) => category.posts, {
-    cascade: true,
-  })
-  categories: Category[];
   @Column({ default: 0 })
   likeCount: number;
   @Column({
     default: 0,
   })
   price: number;
-  @ManyToOne(() => User, (user) => user.posts)
-  @JoinColumn({
-    name: 'userFK',
+  @ManyToMany(() => Category, (category) => category.posts, {
+    cascade: true,
   })
-  userFK: User;
+  @JoinTable()
+  categories: Category[];
+  @ManyToOne(() => User, (user) => user.posts)
+  @JoinColumn()
+  user: User;
 }

@@ -1,11 +1,14 @@
-import { IsOptional, IsString } from 'class-validator';
-import { PickType } from '@nestjs/swagger';
-import { User } from '../entities/user.entity';
+import { IsString } from 'class-validator';
 
-export class CreateUserDto extends PickType(User, ['name', 'eMail'] as const) {
+export class CreateUserDto {
   @IsString()
   name: string;
   @IsString()
-  @IsOptional()
+  username: string;
+  @IsString()
   eMail: string;
+  @IsString()
+  password: string;
+  @IsString()
+  confirmPassword: string;
 }

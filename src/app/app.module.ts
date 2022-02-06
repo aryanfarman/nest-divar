@@ -49,7 +49,6 @@ import { ConsoleColorEnum } from '../enum/console-color.enum';
       useFactory: (app: ConfigType<typeof appConfig>) => ({
         type: 'mssql',
         ...app.database,
-        database: 'divar',
       }),
       inject: [appConfig.KEY],
     }),

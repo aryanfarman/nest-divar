@@ -7,6 +7,8 @@ import { Post } from '../post/entities/post.entity';
 import { PostModule } from '../post/post.module';
 import { LoggerModule } from '../logger/logger.module';
 import { ConsoleColorEnum } from '../enum/console-color.enum';
+import { UtilityModule } from '../utility/utility.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   controllers: [UserController],
@@ -15,6 +17,8 @@ import { ConsoleColorEnum } from '../enum/console-color.enum';
     TypeOrmModule.forFeature([User, Post]),
     LoggerModule.register('user', ConsoleColorEnum.RED),
     PostModule,
+    UtilityModule,
+    AuthModule,
   ],
   exports: [UserService],
 })

@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import cheerio from 'cheerio';
 import { catchError, map, throwError } from 'rxjs';
 import { CannotExecuteNotConnectedError } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UtilityService {
@@ -32,5 +33,17 @@ export class UtilityService {
         return throwError(() => new CannotExecuteNotConnectedError(err));
       }),
     );
+  }
+
+  hash(data: string) {
+    return bcrypt.hashSync(data, 10);
+  }
+
+  compare(password: string, hashedPassword: string) {
+    return bcrypt.compare(password, hashedPassword);
+  }
+
+  confirmPasswords(password: string, confirmPassword: string) {
+    return password === confirmPassword;
   }
 }

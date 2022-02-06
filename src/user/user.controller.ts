@@ -7,6 +7,8 @@ import {
   Patch,
   Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,22 +17,39 @@ import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { CreatePostDto } from '../post/dto/create-post.dto';
 import {
   ApiBadRequestResponse,
+  ApiBody,
   ApiHeader,
   ApiNotFoundResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { LocalAuthGuard } from '../auth/guards/local-auth-guard.guard';
+import { LoginUserDto } from './dto/login-user.dto';
+import { IsPublic } from '../common/guards/isPublic-decorator';
 
-@ApiHeader({
-  name: 'x-app-key',
-  description: 'this a monetize route you have to set x-app-key in headers',
-  required: true,
-})
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @IsPublic()
+  @ApiOperation({
+    description: 'user login.',
+  })
+  @Post('/login')
+  @UseGuards(LocalAuthGuard)
+  @ApiBody({
+    type: LoginUserDto,
+  })
+  login(@Request() req) {
+    return req.user;
+  }
+
+  @ApiHeader({
+    name: 'x-app-key',
+    description: 'this a monetize route you have to set x-app-key in headers',
+    required: true,
+  })
   @ApiBadRequestResponse({
     description: 'this a monetize route you have to set x-app-key in headers',
   })
@@ -51,11 +70,21 @@ export class UserController {
   @ApiOperation({
     description: 'set a post for an user on internal app!',
   })
+  @ApiHeader({
+    name: 'x-app-key',
+    description: 'this a monetize route you have to set x-app-key in headers',
+    required: true,
+  })
   @Post(':id/new-post')
   async postCreate(@Body() createPostDto: CreatePostDto, @Param() id: number) {
     return this.userService.createPost(id, createPostDto);
   }
 
+  @ApiHeader({
+    name: 'x-app-key',
+    description: 'this a monetize route you have to set x-app-key in headers',
+    required: true,
+  })
   @ApiBadRequestResponse({
     description: 'this a monetize route you have to set x-app-key in headers',
   })
@@ -67,6 +96,11 @@ export class UserController {
     return this.userService.findAll(paginationQuery);
   }
 
+  @ApiHeader({
+    name: 'x-app-key',
+    description: 'this a monetize route you have to set x-app-key in headers',
+    required: true,
+  })
   @ApiNotFoundResponse({
     description: 'only existed user ids are valid! ',
   })
@@ -81,6 +115,11 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @ApiHeader({
+    name: 'x-app-key',
+    description: 'this a monetize route you have to set x-app-key in headers',
+    required: true,
+  })
   @ApiNotFoundResponse({
     description: 'only existed user ids are valid! ',
   })
@@ -95,6 +134,11 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @ApiHeader({
+    name: 'x-app-key',
+    description: 'this a monetize route you have to set x-app-key in headers',
+    required: true,
+  })
   @ApiNotFoundResponse({
     description: 'only existed user ids are valid! ',
   })
